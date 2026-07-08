@@ -1,4 +1,4 @@
--- [[ N0XY Hub - Красивая версия с кнопкой Скрыть/Показать ]] --
+-- [[ N0XY Hub - Финальная рабочая версия с кнопками ]] --
 
 if game:GetService("CoreGui"):FindFirstChild("N0XY_Hub") then
     game:GetService("CoreGui"):FindFirstChild("N0XY_Hub"):Destroy()
@@ -7,9 +7,8 @@ end
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
-local Scroll = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
-local ToggleBtn = Instance.new("TextButton") -- Кнопка скрыть/показать
+local ToggleBtn = Instance.new("TextButton")
 local ToggleCorner = Instance.new("UICorner")
 local MainCorner = Instance.new("UICorner")
 
@@ -17,12 +16,10 @@ ScreenGui.Name = "N0XY_Hub"
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
 
--- =======================================================
--- КРАСИВАЯ КНОПКА ДЛЯ ОТКРЫТИЯ/ЗАКРЫТИЯ (Круглая, зеленая)
--- =======================================================
+-- Круглая кнопка для открытия/закрытия
 ToggleBtn.Name = "ToggleBtn"
 ToggleBtn.Parent = ScreenGui
-ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0) -- Слева вверху экрана
+ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
 ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 70)
 ToggleBtn.Text = "N0XY"
@@ -30,31 +27,27 @@ ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleBtn.TextSize = 14
 ToggleBtn.Font = Enum.Font.SourceSansBold
 ToggleBtn.Active = true
-ToggleBtn.Draggable = true -- Иконку тоже можно перетащить куда угодно!
+ToggleBtn.Draggable = true
 
-ToggleCorner.CornerRadius = UDim.new(1, 0) -- Делает кнопку идеально круглой
+ToggleCorner.CornerRadius = UDim.new(1, 0)
 ToggleCorner.Parent = ToggleBtn
 
--- Логика скрытия и показа меню
 ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- =======================================================
--- ГЛАВНОЕ ОКНО (Обновленный дизайн)
--- =======================================================
+-- Главное окно (Увеличили ширину и высоту для кнопок)
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18) -- Глубокий темный цвет
-MainFrame.Position = UDim2.new(0.35, 0, 0.25, 0)
-MainFrame.Size = UDim2.new(0, 260, 0, 340)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.Position = UDim2.new(0.35, 0, 0.15, 0)
+MainFrame.Size = UDim2.new(0, 280, 0, 420) -- Больше места
 MainFrame.Active = true
 MainFrame.Draggable = true
 
-MainCorner.CornerRadius = UDim.new(0, 12) -- Красивые скругленные углы у меню
+MainCorner.CornerRadius = UDim.new(0, 12)
 MainCorner.Parent = MainFrame
 
--- Обводка для меню (Неоновый зеленый контур)
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Thickness = 2
 UIStroke.Color = Color3.fromRGB(0, 180, 70)
@@ -73,28 +66,34 @@ local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = Title
 
--- Зона для кнопок
-Scroll.Parent = MainFrame
-Scroll.Position = UDim2.new(0, 15, 0, 60)
-Scroll.Size = UDim2.new(1, -30, 1, -75)
-Scroll.BackgroundTransparency = 1
-Scroll.CanvasSize = UDim2.new(0, 0, 0, 380)
-Scroll.ScrollBarThickness = 2
-
-UIListLayout.Parent = Scroll
+-- ИСПРАВЛЕНО: Список прикреплен прямо к главному окну с отступами!
+UIListLayout.Parent = MainFrame
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.Padding = UDim.new(0, 8)
 
--- Функция создания стильных кнопок хаба
-local function CreateButton(text, callback)
+-- Добавим пустой элемент сверху, чтобы кнопки не налезали на заголовок
+local PaddingFrame = Instance.new("Frame")
+PaddingFrame.Size = UDim2.new(1, 0, 0, 45)
+PaddingFrame.BackgroundTransparency = 1
+PaddingFrame.Parent = MainFrame
+PaddingFrame.LayoutOrder = 0
+
+-- Функция создания кнопок напрямую в окне
+local function CreateButton(text, callback, order)
     local Btn = Instance.new("TextButton")
-    Btn.Parent = Scroll
-    Btn.Size = UDim2.new(1, 0, 0, 38)
-    Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Темные кнопки
+    Btn.Parent = MainFrame -- Прямая привязка к окну!
+    Btn.Size = UDim2.new(1, -30, 0, 36)
+    Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Btn.Text = text
     Btn.TextColor3 = Color3.fromRGB(240, 240, 240)
     Btn.TextSize = 14
     Btn.Font = Enum.Font.SourceSansBold
+    Btn.LayoutOrder = order
+
+    -- Отцентровка кнопок внутри контейнера
+    local UIPadding = Instance.new("UIPadding")
+    UIPadding.PaddingLeft = UDim.new(0, 15)
+    UIPadding.Parent = MainFrame
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 8)
@@ -113,23 +112,19 @@ local Players = game:Service("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:Service("RunService")
 
--- =======================================================
--- ФУНКЦИИ ХАБА
--- =======================================================
-
 -- 1. GOD MODE
 CreateButton("⚡ Активировать God Mode", function()
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         LocalPlayer.Character.Humanoid.MaxHealth = math.huge
         LocalPlayer.Character.Humanoid.Health = math.huge
     end
-end)
+end, 1)
 
 -- 2. NOCLIP
 local noclip = false
 local noclipBtn = CreateButton("🧱 Noclip: ВЫКЛ", function()
     noclip = not noclip
-end)
+end, 2)
 RunService.Stepped:Connect(function()
     if noclip and LocalPlayer.Character then
         noclipBtn.Text = "🧱 Noclip: ВКЛ"
@@ -168,7 +163,7 @@ local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", function()
         flyBtn.Text = "✈️ Fly: ВЫКЛ"
         flyBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end)
+end, 3)
 
 -- 4. INFINITE JUMP
 local infJump = false
@@ -181,7 +176,7 @@ local jumpBtn = CreateButton("🦘 Inf Jump: ВЫКЛ", function()
         jumpBtn.Text = "🦘 Inf Jump: ВЫКЛ"
         jumpBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end)
+end, 4)
 game:GetService("UserInputService").JumpRequest:Connect(function()
     if infJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
         LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
@@ -214,7 +209,7 @@ CreateButton("💥 Fling Dropkick", function()
         task.wait(0.5)
         bAV:Destroy() bV:Destroy()
     end
-end)
+end, 5)
 
 -- 6. ANTI FLING
 local antiFling = false
@@ -227,7 +222,7 @@ local antiBtn = CreateButton("🛡️ Anti Fling: ВЫКЛ", function()
         antiBtn.Text = "🛡️ Anti Fling: ВЫКЛ"
         antiBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end)
+end, 6)
 RunService.Heartbeat:Connect(function()
     if antiFling and LocalPlayer.Character then
         for _, p in pairs(Players:GetPlayers()) do
@@ -268,9 +263,9 @@ local espBtn = CreateButton("👁️ ESP: ВЫКЛ", function()
         end
         for _, p in pairs(Players:GetPlayers()) do addESP(p) end
     end
-end)
+end, 7)
 
--- Полное закрытие и удаление скрипта
+-- Кнопка закрытия
 CreateButton("❌ Полностью закрыть чит", function()
     ScreenGui:Destroy()
-end)
+end, 8)
