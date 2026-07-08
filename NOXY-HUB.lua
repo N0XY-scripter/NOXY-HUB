@@ -1,4 +1,4 @@
--- [[ N0XY Hub - Полностью исправленная версия с кнопками ]] --
+-- [[ N0XY Hub - Фиксированная мобильная версия ]] --
 
 if game:GetService("CoreGui"):FindFirstChild("N0XY_Hub") then
     game:GetService("CoreGui"):FindFirstChild("N0XY_Hub"):Destroy()
@@ -7,17 +7,15 @@ end
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
-local UIListLayout = Instance.new("UIListLayout")
 local ToggleBtn = Instance.new("TextButton")
 local ToggleCorner = Instance.new("UICorner")
 local MainCorner = Instance.new("UICorner")
-local UIPadding = Instance.new("UIPadding")
 
 ScreenGui.Name = "N0XY_Hub"
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
 
--- Круглая кнопка открытия/закрытия хаба
+-- Круглая кнопка открытия/закрытия
 ToggleBtn.Name = "ToggleBtn"
 ToggleBtn.Parent = ScreenGui
 ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
@@ -37,12 +35,12 @@ ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- Главное окно меню
+-- Главное окно меню (Фиксированный размер под 8 кнопок)
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-MainFrame.Position = UDim2.new(0.35, 0, 0.15, 0)
-MainFrame.Size = UDim2.new(0, 260, 0, 390) -- Сбалансированный мобильный размер
+MainFrame.Position = UDim2.new(0.35, 0, 0.1, 0)
+MainFrame.Size = UDim2.new(0, 260, 0, 395) -- Четкие размеры в пикселях
 MainFrame.Active = true
 MainFrame.Draggable = true
 
@@ -67,27 +65,17 @@ local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = Title
 
--- ИСПРАВЛЕНО: Один общий отступ для списка, кнопки больше не улетают!
-UIPadding.PaddingTop = UDim.new(0, 55) -- Оставляем место под заголовок
-UIPadding.PaddingLeft = UDim.new(0, 15)
-UIPadding.PaddingRight = UDim.new(0, 15)
-UIPadding.Parent = MainFrame
-
-UIListLayout.Parent = MainFrame
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 8)
-
--- Функция создания красивых кнопок
-local function CreateButton(text, callback, order)
+-- ИСПРАВЛЕНО: Функция ручного размещения кнопок по точной высоте (Y)
+local function CreateButton(text, yPosition, callback)
     local Btn = Instance.new("TextButton")
     Btn.Parent = MainFrame
-    Btn.Size = UDim2.new(1, 0, 0, 34) -- Занимает всю ширину с учетом отступов
+    Btn.Size = UDim2.new(1, -30, 0, 34) -- Ширина с красивыми отступами по бокам
+    Btn.Position = UDim2.new(0, 15, 0, yPosition) -- Точное положение по вертикали
     Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Btn.Text = text
     Btn.TextColor3 = Color3.fromRGB(240, 240, 240)
     Btn.TextSize = 14
     Btn.Font = Enum.Font.SourceSansBold
-    Btn.LayoutOrder = order
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 8)
@@ -107,22 +95,22 @@ local LocalPlayer = Players.LocalPlayer
 local RunService = game:Service("RunService")
 
 -- =======================================================
--- ДОБАВЛЕНИЕ ФУНКЦИЙ НАПРЯМУЮ В СПИСОК
+-- РАЗМЕЩЕНИЕ КНОПОК ПО ТОЧНЫМ КООРДИНАТАМ
 -- =======================================================
 
--- 1. GOD MODE
-CreateButton("⚡ Активировать God Mode", function()
+-- 1. GOD MODE (Высота 55)
+CreateButton("⚡ Активировать God Mode", 55, function()
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         LocalPlayer.Character.Humanoid.MaxHealth = math.huge
         LocalPlayer.Character.Humanoid.Health = math.huge
     end
-end, 1)
+end)
 
--- 2. NOCLIP
+-- 2. NOCLIP (Высота 97)
 local noclip = false
-local noclipBtn = CreateButton("🧱 Noclip: ВЫКЛ", function()
+local noclipBtn = CreateButton("🧱 Noclip: ВЫКЛ", 97, function()
     noclip = not noclip
-end, 2)
+end)
 RunService.Stepped:Connect(function()
     if noclip and LocalPlayer.Character then
         noclipBtn.Text = "🧱 Noclip: ВКЛ"
@@ -136,9 +124,9 @@ RunService.Stepped:Connect(function()
     end
 end)
 
--- 3. FLY
+-- 3. FLY (Высота 139)
 local fly = false
-local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", function()
+local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", 139, function()
     fly = not fly
     local Character = LocalPlayer.Character
     if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
@@ -161,11 +149,11 @@ local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", function()
         flyBtn.Text = "✈️ Fly: ВЫКЛ"
         flyBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end, 3)
+end)
 
--- 4. INFINITE JUMP
+-- 4. INFINITE JUMP (Высота 181)
 local infJump = false
-local jumpBtn = CreateButton("🦘 Inf Jump: ВЫКЛ", function()
+local jumpBtn = CreateButton("🦘 Inf Jump: ВЫКЛ", 181, function()
     infJump = not infJump
     if infJump then
         jumpBtn.Text = "🦘 Inf Jump: ВКЛ"
@@ -174,15 +162,15 @@ local jumpBtn = CreateButton("🦘 Inf Jump: ВЫКЛ", function()
         jumpBtn.Text = "🦘 Inf Jump: ВЫКЛ"
         jumpBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end, 4)
+end)
 game:GetService("UserInputService").JumpRequest:Connect(function()
     if infJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
         LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
     end
 end)
 
--- 5. FLING DROPKICK
-CreateButton("💥 Fling Dropkick", function()
+-- 5. FLING DROPKICK (Высота 223)
+CreateButton("💥 Fling Dropkick", 223, function()
     local Character = LocalPlayer.Character
     local Root = Character and Character:FindFirstChild("HumanoidRootPart")
     if not Root then return end
@@ -207,11 +195,11 @@ CreateButton("💥 Fling Dropkick", function()
         task.wait(0.5)
         bAV:Destroy() bV:Destroy()
     end
-end, 5)
+end)
 
--- 6. ANTI FLING
+-- 6. ANTI FLING (Высота 265)
 local antiFling = false
-local antiBtn = CreateButton("🛡️ Anti Fling: ВЫКЛ", function()
+local antiBtn = CreateButton("🛡️ Anti Fling: ВЫКЛ", 265, function()
     antiFling = not antiFling
     if antiFling then
         antiBtn.Text = "🛡️ Anti Fling: ВКЛ"
@@ -220,7 +208,7 @@ local antiBtn = CreateButton("🛡️ Anti Fling: ВЫКЛ", function()
         antiBtn.Text = "🛡️ Anti Fling: ВЫКЛ"
         antiBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
-end, 6)
+end)
 RunService.Heartbeat:Connect(function()
     if antiFling and LocalPlayer.Character then
         for _, p in pairs(Players:GetPlayers()) do
@@ -237,10 +225,10 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- 7. ESP (Зеленый)
+-- 7. ESP (Высота 307)
 local esp = false
 local espHighlights = {}
-local espBtn = CreateButton("👁️ ESP: ВЫКЛ", function()
+local espBtn = CreateButton("👁️ ESP: ВЫКЛ", 307, function()
     esp = not esp
     if not esp then
         espBtn.Text = "👁️ ESP: ВЫКЛ"
@@ -261,9 +249,9 @@ local espBtn = CreateButton("👁️ ESP: ВЫКЛ", function()
         end
         for _, p in pairs(Players:GetPlayers()) do addESP(p) end
     end
-end, 7)
+end)
 
--- Кнопка закрытия
-CreateButton("❌ Полностью закрыть чит", function()
+-- Кнопка закрытия (Высота 349)
+CreateButton("❌ Полностью закрыть чит", 349, function()
     ScreenGui:Destroy()
-end, 8)
+end)
