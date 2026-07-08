@@ -1,4 +1,4 @@
--- [[ N0XY Hub - Финальная рабочая версия с кнопками ]] --
+-- [[ N0XY Hub - Полностью исправленная версия с кнопками ]] --
 
 if game:GetService("CoreGui"):FindFirstChild("N0XY_Hub") then
     game:GetService("CoreGui"):FindFirstChild("N0XY_Hub"):Destroy()
@@ -11,12 +11,13 @@ local UIListLayout = Instance.new("UIListLayout")
 local ToggleBtn = Instance.new("TextButton")
 local ToggleCorner = Instance.new("UICorner")
 local MainCorner = Instance.new("UICorner")
+local UIPadding = Instance.new("UIPadding")
 
 ScreenGui.Name = "N0XY_Hub"
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
 
--- Круглая кнопка для открытия/закрытия
+-- Круглая кнопка открытия/закрытия хаба
 ToggleBtn.Name = "ToggleBtn"
 ToggleBtn.Parent = ScreenGui
 ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
@@ -36,12 +37,12 @@ ToggleBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
 
--- Главное окно (Увеличили ширину и высоту для кнопок)
+-- Главное окно меню
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 MainFrame.Position = UDim2.new(0.35, 0, 0.15, 0)
-MainFrame.Size = UDim2.new(0, 280, 0, 420) -- Больше места
+MainFrame.Size = UDim2.new(0, 260, 0, 390) -- Сбалансированный мобильный размер
 MainFrame.Active = true
 MainFrame.Draggable = true
 
@@ -53,7 +54,7 @@ UIStroke.Thickness = 2
 UIStroke.Color = Color3.fromRGB(0, 180, 70)
 UIStroke.Parent = MainFrame
 
--- Заголовок
+-- Заголовок хаба
 Title.Parent = MainFrame
 Title.Size = UDim2.new(1, 0, 0, 45)
 Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -66,34 +67,27 @@ local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 12)
 TitleCorner.Parent = Title
 
--- ИСПРАВЛЕНО: Список прикреплен прямо к главному окну с отступами!
+-- ИСПРАВЛЕНО: Один общий отступ для списка, кнопки больше не улетают!
+UIPadding.PaddingTop = UDim.new(0, 55) -- Оставляем место под заголовок
+UIPadding.PaddingLeft = UDim.new(0, 15)
+UIPadding.PaddingRight = UDim.new(0, 15)
+UIPadding.Parent = MainFrame
+
 UIListLayout.Parent = MainFrame
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 8)
 
--- Добавим пустой элемент сверху, чтобы кнопки не налезали на заголовок
-local PaddingFrame = Instance.new("Frame")
-PaddingFrame.Size = UDim2.new(1, 0, 0, 45)
-PaddingFrame.BackgroundTransparency = 1
-PaddingFrame.Parent = MainFrame
-PaddingFrame.LayoutOrder = 0
-
--- Функция создания кнопок напрямую в окне
+-- Функция создания красивых кнопок
 local function CreateButton(text, callback, order)
     local Btn = Instance.new("TextButton")
-    Btn.Parent = MainFrame -- Прямая привязка к окну!
-    Btn.Size = UDim2.new(1, -30, 0, 36)
+    Btn.Parent = MainFrame
+    Btn.Size = UDim2.new(1, 0, 0, 34) -- Занимает всю ширину с учетом отступов
     Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Btn.Text = text
     Btn.TextColor3 = Color3.fromRGB(240, 240, 240)
     Btn.TextSize = 14
     Btn.Font = Enum.Font.SourceSansBold
     Btn.LayoutOrder = order
-
-    -- Отцентровка кнопок внутри контейнера
-    local UIPadding = Instance.new("UIPadding")
-    UIPadding.PaddingLeft = UDim.new(0, 15)
-    UIPadding.Parent = MainFrame
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 8)
@@ -111,6 +105,10 @@ end
 local Players = game:Service("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:Service("RunService")
+
+-- =======================================================
+-- ДОБАВЛЕНИЕ ФУНКЦИЙ НАПРЯМУЮ В СПИСОК
+-- =======================================================
 
 -- 1. GOD MODE
 CreateButton("⚡ Активировать God Mode", function()
