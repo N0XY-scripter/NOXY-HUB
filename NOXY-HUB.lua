@@ -1,140 +1,25 @@
--- [[ N0XY Hub - Фиксированная мобильная версия ]] --
+-- [[ N0XY Hub - ЧАСТЬ 2 ]] --
 
-if game:GetService("CoreGui"):FindFirstChild("N0XY_Hub") then
-    game:GetService("CoreGui"):FindFirstChild("N0XY_Hub"):Destroy()
-end
+local B3 = Instance.new("TextButton")
+B3.Parent = MainFrame
+B3.Size = UDim2.new(1, -30, 0, 34)
+B3.Position = UDim2.new(0, 15, 0, 139)
+B3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B3.Text = "✈️ Fly: ВЫКЛ"
+B3.TextColor3 = Color3.fromRGB(240, 240, 240)
+B3.Font = Enum.Font.SourceSansBold
+B3.TextSize = 14
+Instance.new("UICorner", B3).CornerRadius = UDim.new(0, 8)
 
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local ToggleBtn = Instance.new("TextButton")
-local ToggleCorner = Instance.new("UICorner")
-local MainCorner = Instance.new("UICorner")
-
-ScreenGui.Name = "N0XY_Hub"
-ScreenGui.Parent = game:GetService("CoreGui")
-ScreenGui.ResetOnSpawn = false
-
--- Круглая кнопка открытия/закрытия
-ToggleBtn.Name = "ToggleBtn"
-ToggleBtn.Parent = ScreenGui
-ToggleBtn.Position = UDim2.new(0.05, 0, 0.15, 0)
-ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 70)
-ToggleBtn.Text = "N0XY"
-ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleBtn.TextSize = 14
-ToggleBtn.Font = Enum.Font.SourceSansBold
-ToggleBtn.Active = true
-ToggleBtn.Draggable = true
-
-ToggleCorner.CornerRadius = UDim.new(1, 0)
-ToggleCorner.Parent = ToggleBtn
-
-ToggleBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
-end)
-
--- Главное окно меню (Фиксированный размер под 8 кнопок)
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-MainFrame.Position = UDim2.new(0.35, 0, 0.1, 0)
-MainFrame.Size = UDim2.new(0, 260, 0, 395) -- Четкие размеры в пикселях
-MainFrame.Active = true
-MainFrame.Draggable = true
-
-MainCorner.CornerRadius = UDim.new(0, 12)
-MainCorner.Parent = MainFrame
-
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Thickness = 2
-UIStroke.Color = Color3.fromRGB(0, 180, 70)
-UIStroke.Parent = MainFrame
-
--- Заголовок хаба
-Title.Parent = MainFrame
-Title.Size = UDim2.new(1, 0, 0, 45)
-Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Title.Text = "N0XY Hub | Universal"
-Title.TextColor3 = Color3.fromRGB(0, 255, 100)
-Title.TextSize = 18
-Title.Font = Enum.Font.SourceSansBold
-
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
-TitleCorner.Parent = Title
-
--- ИСПРАВЛЕНО: Функция ручного размещения кнопок по точной высоте (Y)
-local function CreateButton(text, yPosition, callback)
-    local Btn = Instance.new("TextButton")
-    Btn.Parent = MainFrame
-    Btn.Size = UDim2.new(1, -30, 0, 34) -- Ширина с красивыми отступами по бокам
-    Btn.Position = UDim2.new(0, 15, 0, yPosition) -- Точное положение по вертикали
-    Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Btn.Text = text
-    Btn.TextColor3 = Color3.fromRGB(240, 240, 240)
-    Btn.TextSize = 14
-    Btn.Font = Enum.Font.SourceSansBold
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Btn
-    
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Thickness = 1
-    Stroke.Color = Color3.fromRGB(45, 45, 45)
-    Stroke.Parent = Btn
-
-    Btn.MouseButton1Click:Connect(callback)
-    return Btn
-end
-
-local Players = game:Service("Players")
-local LocalPlayer = Players.LocalPlayer
-local RunService = game:Service("RunService")
-
--- =======================================================
--- РАЗМЕЩЕНИЕ КНОПОК ПО ТОЧНЫМ КООРДИНАТАМ
--- =======================================================
-
--- 1. GOD MODE (Высота 55)
-CreateButton("⚡ Активировать God Mode", 55, function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        LocalPlayer.Character.Humanoid.MaxHealth = math.huge
-        LocalPlayer.Character.Humanoid.Health = math.huge
-    end
-end)
-
--- 2. NOCLIP (Высота 97)
-local noclip = false
-local noclipBtn = CreateButton("🧱 Noclip: ВЫКЛ", 97, function()
-    noclip = not noclip
-end)
-RunService.Stepped:Connect(function()
-    if noclip and LocalPlayer.Character then
-        noclipBtn.Text = "🧱 Noclip: ВКЛ"
-        noclipBtn.TextColor3 = Color3.fromRGB(0, 255, 100)
-        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-            if part:IsA("BasePart") then part.CanCollide = false end
-        end
-    else
-        noclipBtn.Text = "🧱 Noclip: ВЫКЛ"
-        noclipBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
-    end
-end)
-
--- 3. FLY (Высота 139)
 local fly = false
-local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", 139, function()
+B3.MouseButton1Click:Connect(function()
     fly = not fly
     local Character = LocalPlayer.Character
     if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
     local Root = Character.HumanoidRootPart
-    
     if fly then
-        flyBtn.Text = "✈️ Fly: ВКЛ"
-        flyBtn.TextColor3 = Color3.fromRGB(0, 255, 100)
+        B3.Text = "✈️ Fly: ВКЛ"
+        B3.TextColor3 = Color3.fromRGB(0, 255, 100)
         local BV = Instance.new("BodyVelocity")
         BV.Name = "NoxyFly"
         BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -146,40 +31,48 @@ local flyBtn = CreateButton("✈️ Fly: ВЫКЛ", 139, function()
             BV:Destroy()
         end)
     else
-        flyBtn.Text = "✈️ Fly: ВЫКЛ"
-        flyBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+        B3.Text = "✈️ Fly: ВЫКЛ"
+        B3.TextColor3 = Color3.fromRGB(240, 240, 240)
     end
 end)
 
--- 4. INFINITE JUMP (Высота 181)
+local B4 = Instance.new("TextButton")
+B4.Parent = MainFrame
+B4.Size = UDim2.new(1, -30, 0, 34)
+B4.Position = UDim2.new(0, 15, 0, 181)
+B4.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B4.Text = "🦘 Inf Jump: ВЫКЛ"
+B4.TextColor3 = Color3.fromRGB(240, 240, 240)
+B4.Font = Enum.Font.SourceSansBold
+B4.TextSize = 14
+Instance.new("UICorner", B4).CornerRadius = UDim.new(0, 8)
+
 local infJump = false
-local jumpBtn = CreateButton("🦘 Inf Jump: ВЫКЛ", 181, function()
-    infJump = not infJump
-    if infJump then
-        jumpBtn.Text = "🦘 Inf Jump: ВКЛ"
-        jumpBtn.TextColor3 = Color3.fromRGB(0, 255, 100)
-    else
-        jumpBtn.Text = "🦘 Inf Jump: ВЫКЛ"
-        jumpBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
-    end
-end)
+B4.MouseButton1Click:Connect(function() infJump = not infJump end)
 game:GetService("UserInputService").JumpRequest:Connect(function()
     if infJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
         LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
     end
 end)
 
--- 5. FLING DROPKICK (Высота 223)
-CreateButton("💥 Fling Dropkick", 223, function()
+local B5 = Instance.new("TextButton")
+B5.Parent = MainFrame
+B5.Size = UDim2.new(1, -30, 0, 34)
+B5.Position = UDim2.new(0, 15, 0, 223)
+B5.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B5.Text = "💥 Fling Dropkick"
+B5.TextColor3 = Color3.fromRGB(240, 240, 240)
+B5.Font = Enum.Font.SourceSansBold
+B5.TextSize = 14
+Instance.new("UICorner", B5).CornerRadius = UDim.new(0, 8)
+B5.MouseButton1Click:Connect(function()
     local Character = LocalPlayer.Character
     local Root = Character and Character:FindFirstChild("HumanoidRootPart")
     if not Root then return end
     local target = nil
-    local maxDist = 100
     for _, p in pairs(Players:GetPlayers()) do
         if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-            local dist = (Root.Position - p.Character.HumanoidRootPart.Position).Magnitude
-            if dist < maxDist then maxDist = dist; target = p.Character.HumanoidRootPart end
+            target = p.Character.HumanoidRootPart
         end
     end
     if target then
@@ -192,23 +85,23 @@ CreateButton("💥 Fling Dropkick", 223, function()
         bV.Velocity = Root.CFrame.LookVector * 150
         bV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
         bV.Parent = Root
-        task.wait(0.5)
-        bAV:Destroy() bV:Destroy()
+        task.wait(0.5) bAV:Destroy() bV:Destroy()
     end
 end)
 
--- 6. ANTI FLING (Высота 265)
+local B6 = Instance.new("TextButton")
+B6.Parent = MainFrame
+B6.Size = UDim2.new(1, -30, 0, 34)
+B6.Position = UDim2.new(0, 15, 0, 265)
+B6.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B6.Text = "🛡️ Anti Fling: ВЫКЛ"
+B6.TextColor3 = Color3.fromRGB(240, 240, 240)
+B6.Font = Enum.Font.SourceSansBold
+B6.TextSize = 14
+Instance.new("UICorner", B6).CornerRadius = UDim.new(0, 8)
+
 local antiFling = false
-local antiBtn = CreateButton("🛡️ Anti Fling: ВЫКЛ", 265, function()
-    antiFling = not antiFling
-    if antiFling then
-        antiBtn.Text = "🛡️ Anti Fling: ВКЛ"
-        antiBtn.TextColor3 = Color3.fromRGB(0, 255, 100)
-    else
-        antiBtn.Text = "🛡️ Anti Fling: ВЫКЛ"
-        antiBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
-    end
-end)
+B6.MouseButton1Click:Connect(function() antiFling = not antiFling end)
 RunService.Heartbeat:Connect(function()
     if antiFling and LocalPlayer.Character then
         for _, p in pairs(Players:GetPlayers()) do
@@ -225,33 +118,44 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- 7. ESP (Высота 307)
+local B7 = Instance.new("TextButton")
+B7.Parent = MainFrame
+B7.Size = UDim2.new(1, -30, 0, 34)
+B7.Position = UDim2.new(0, 15, 0, 307)
+B7.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B7.Text = "👁️ ESP: ВЫКЛ"
+B7.TextColor3 = Color3.fromRGB(240, 240, 240)
+B7.Font = Enum.Font.SourceSansBold
+B7.TextSize = 14
+Instance.new("UICorner", B7).CornerRadius = UDim.new(0, 8)
+
 local esp = false
 local espHighlights = {}
-local espBtn = CreateButton("👁️ ESP: ВЫКЛ", 307, function()
+B7.MouseButton1Click:Connect(function()
     esp = not esp
     if not esp then
-        espBtn.Text = "👁️ ESP: ВЫКЛ"
-        espBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
         for _, h in pairs(espHighlights) do pcall(function() h:Destroy() end) end
         table.clear(espHighlights)
     else
-        espBtn.Text = "👁️ ESP: ВКЛ"
-        espBtn.TextColor3 = Color3.fromRGB(0, 255, 100)
-        local function addESP(p)
+        for _, p in pairs(Players:GetPlayers()) do
             if p ~= LocalPlayer and p.Character then
-                local h = Instance.new("Highlight")
-                h.Parent = p.Character
+                local h = Instance.new("Highlight", p.Character)
                 h.FillColor = Color3.fromRGB(0, 255, 0)
                 h.FillTransparency = 0.5
                 espHighlights[p.Name] = h
             end
         end
-        for _, p in pairs(Players:GetPlayers()) do addESP(p) end
     end
 end)
 
--- Кнопка закрытия (Высота 349)
-CreateButton("❌ Полностью закрыть чит", 349, function()
-    ScreenGui:Destroy()
-end)
+local B8 = Instance.new("TextButton")
+B8.Parent = MainFrame
+B8.Size = UDim2.new(1, -30, 0, 34)
+B8.Position = UDim2.new(0, 15, 0, 349)
+B8.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+B8.Text = "❌ Полностью закрыть чит"
+B8.TextColor3 = Color3.fromRGB(240, 240, 240)
+B8.Font = Enum.Font.SourceSansBold
+B8.TextSize = 14
+Instance.new("UICorner", B8).CornerRadius = UDim.new(0, 8)
+B8.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
