@@ -1,7 +1,7 @@
--- [[ N0XY MASTER ENGINE V7 — PART 1 ]] --
+-- [[ N0XY MASTER ENGINE V7 — MAIN LOADER ]] --
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/main/source.lua'))()
 
-local Window = Rayfield:CreateWindow({
+_G.Window = Rayfield:CreateWindow({
    Name = "N0XY MASTER ENGINE 💀 (v7)",
    LoadingTitle = "Загрузка N0XY CORE...",
    LoadingSubtitle = "by N0XY",
@@ -13,7 +13,7 @@ local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 
--- ВСЕ ПЕРЕМЕННЫЕ
+-- ВСЕ ОБЩИЕ ПЕРЕМЕННЫЕ
 local flying = false
 local flySpeedSetting = 50
 local noclip = false
@@ -46,8 +46,8 @@ local function getTarget()
    return nil
 end
 
-local MainTab = Window:CreateTab("Главная & PvP ⚔️", 0)
-local WorldTab = Window:CreateTab("Мир & Небо 🌌", 0)
+local MainTab = _G.Window:CreateTab("Главная & PvP ⚔️", 0)
+local WorldTab = _G.Window:CreateTab("Мир & Небо 🌌", 0)
 
 local FlyConnection
 MainTab:CreateToggle({
@@ -117,7 +117,7 @@ MainTab:CreateToggle({
 MainTab:CreateToggle({
    Name = "Aim-Lock (Наводка на игроков)",
    CurrentValue = false,
-   Callback = function(Value) _G.Aim = Value end,
+   Callback = function(Value) _G.Aim = Value end
 })
 
 MainTab:CreateToggle({
@@ -141,5 +141,5 @@ WorldTab:CreateSlider({ Name = "Гравитация Мира 🌍", Range = {0,
 WorldTab:CreateButton({ Name = "Включить Вечную Ночь 🌙", Callback = function() Lighting.TimeOfDay = "00:00:00" end })
 WorldTab:CreateButton({ Name = "Включить Вечный День ☀️", Callback = function() Lighting.TimeOfDay = "12:00:00" end })
 
--- [[ ПОДКЛЮЧАЕМ ВТОРУЮ ЧАСТЬ НАПРЯМУЮ ИЗ ТВОЕГО ГИТХАБА ]] --
--- ТУТ МЫ СЕЙЧАС СДЕЛАЕМ ЗАГРУЗКУ. ПОКА СКОПИРУЙ ЭТОТ КУСОК!
+-- [[ ИНЖЕКТ ВТОРОЙ ЧАСТИ ФУНКЦИЙ С ТВОЕЙ ССЫЛКИ ]] --
+loadstring(game:HttpGet('https://raw.githubusercontent.com/N0XY-scripter/functions.lua/refs/heads/main/functions.lua'))()
